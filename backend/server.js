@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import connectDB from './db/connectDB.js'
+import authRouter from './routes/authRouter.js'
+import errorMiddleware from './middlewares/errorMiddleware.js'
 
 dotenv.config()
 
@@ -16,10 +18,16 @@ app.use(cors({
 
 const PORT = process.env.PORT || 5000
 
+// Routes
 
 app.get('/', (req, res) => {
     res.send('Backend is running...');
 });
+
+app.use('/api/auth', authRouter)
+
+//error handling middleware
+app.use(errorMiddleware)
 
 app.listen(PORT, () => {
     connectDB()
