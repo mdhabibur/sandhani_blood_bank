@@ -1,8 +1,9 @@
-import { sendEmailVerificationEmail, sendWelcomeEmail } from "../mailtrap/emails.js";
+import { passwordResetRequestSend, sendEmailVerificationEmail, sendWelcomeEmail, sendPasswordResetSuccessEmail } from "../mailtrap/emails.js";
 import User from "../models/User.js";
 import { ErrorHandler } from "../utils/errorHandler.js";
 import { generateJwtAndSetCookie } from "../utils/generateJwtAndSetCookie.js";
 import bcrypt from "bcryptjs";
+import crypto from 'crypto'
 
 export const singUp = async (req, res, next) => {
 	try {
@@ -169,4 +170,102 @@ export const verifyEmail = async (req, res, next) => {
         next(error)
     }
 
+}
+
+
+export const forgotPassword = async (req, res, next) => {
+
+	try {
+		const {email} = req.body
+		if(!email){
+			return next(new ErrorHandler("Email is required.", 400))
+		}
+
+		//find user by email
+		const user = await User.findOne({email})
+
+		if (!user) {
+			return next(new ErrorHandler("User not found with this email.", 404));
+		  }
+
+		  //generate reset token
+		  const resetToken = crypto.randomBytes(20).toString("hex") 
+
+		  //hash and set reset token to the user document
+		  const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex")
+
+		  user.resetToken = hashedToken
+		  user.resetTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours from now
+
+		  await user.save({ validateBeforeSave: false })
+
+		  //create resetUrl
+		  const resetUrl = `http://localhost:5000/api/auth/reset-password/${resetToken}`
+
+		  //send email to user about reset token
+		  await passwordResetRequestSend(user.email, resetUrl)
+
+		  res.status(200).json({
+			success: true,
+			message: `Password reset link sent to ${user.email}. Please check your inbox.`,
+		  });
+
+
+		
+	} catch (error) {
+		next(error);
+
+	}
+
+}
+
+export const resetPassword = async (req, res, next) =>  {
+	try {
+
+		const {token} = req.params 
+		const {password} = req.body 
+
+
+		if(!password){
+			return next(new ErrorHandler("Password is required.", 400))
+		}
+
+		//hash the reset token from url
+		const hashedToken = crypto.createHash("sha256").update(token).digest("hex")
+
+		//find the user by reset and ensure that it has not expired yet
+
+		const user = await User.findOne({
+			resetToken: hashedToken,
+			resetTokenExpiresAt: {$gt: Date.now()}
+		})
+
+		if(!user){
+			return next(new ErrorHandler("Invalid or expired password reset token.", 400));
+
+		}
+
+		//hash the new password
+		const salt = await bcrypt.genSalt(10)
+		const hashedPassword = await bcrypt.hash(password, salt)
+
+		//update the user password
+		user.password = hashedPassword
+		user.resetToken = null
+		user.resetTokenExpiresAt = null
+
+		await user.save()
+
+		//send password reset successful email
+		sendPasswordResetSuccessEmail(user.email)
+
+
+		res.status(200).json({
+			success: true,
+			message: "Password has been reset successfully",		 
+		 });
+		
+	} catch (error) {
+		next(error)
+	}
 }
