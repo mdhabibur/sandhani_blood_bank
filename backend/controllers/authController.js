@@ -1,3 +1,4 @@
+import { sendEmailVerificationEmail, sendWelcomeEmail } from "../mailtrap/emails.js";
 import User from "../models/User.js";
 import { ErrorHandler } from "../utils/errorHandler.js";
 import { generateJwtAndSetCookie } from "../utils/generateJwtAndSetCookie.js";
@@ -39,6 +40,10 @@ export const singUp = async (req, res, next) => {
 		});
 
 		await user.save();
+
+        //send email for user email verification
+        await sendEmailVerificationEmail(user.email, user.verificationToken)
+
 
 		// Generate JWT and setCookie
 		generateJwtAndSetCookie(user, res);
@@ -152,6 +157,8 @@ export const verifyEmail = async (req, res, next) => {
         user.verificationTokenExpiresAt = null
 
         await user.save()
+
+        await sendWelcomeEmail(user.email, user.username)
 
         res.status(200).json({
             success: true,
