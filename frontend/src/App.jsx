@@ -8,13 +8,16 @@ import SignUp from "./pages/SignUp";
 import { animate, motion } from "framer-motion";
 import FloatingCircularTopBottom from "./components/floatingCircularTopBottom";
 import FloatingCircularBottomRight from "./components/FloatingCircularBottomRight";
+import FloatingShape from "./components/FloatingShape";
 
 function App() {
 	return (
-		<div className="relative min-h-screen bg-gradient-to-br from-[#577BC1] via-[#A888B5] to-[#85A947] overflow-hidden ">
+		<div className="min-h-screen bg-gradient-to-br
+    from-gray-900 via-green-900 to-emerald-900 flex items-center justify-center relative overflow-hidden">
 
-			<FloatingCircularTopBottom />
-			<FloatingCircularBottomRight />
+      <FloatingShape color='bg-green-500' size='w-64 h-64' top='-5%' left='10%' delay={0} />
+			<FloatingShape color='bg-emerald-500' size='w-48 h-48' top='70%' left='80%' delay={5} />
+			<FloatingShape color='bg-lime-500' size='w-32 h-32' top='40%' left='-10%' delay={2} />
 
 			<BrowserRouter>
 				<Routes>
