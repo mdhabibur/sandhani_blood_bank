@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp";
 import { animate, motion } from "framer-motion";
 
 import FloatingShape from "./components/FloatingShape";
+import EmailVerificationPage from "./pages/EmailVerificationPage";
 
 function App() {
 	return (
@@ -23,6 +24,7 @@ function App() {
 					<Route path="/" element={<Home />} />
 					<Route path="/signin" element={<SignIn />} />
 					<Route path="/signup" element={<SignUp />} />
+          <Route path="/verify-email" element={<EmailVerificationPage />} />
 				</Routes>
 			</BrowserRouter>
 		</div>
