@@ -107,6 +107,27 @@ export const login = async (req, res, next) => {
 	}
 };
 
+export const checkAuth = async (req, res, next) => {
+	try {
+		const user = await User.findById(req.userId).select("-password")
+
+		if(!user){
+			return next(new ErrorHandler("User not found. Authentication failed.", 404));
+
+		}
+
+		res.status(200).json({
+			success: true,
+			message: "User is authenticated.",
+			user,
+		  });
+
+		
+	} catch (error) {
+		next(error)
+	}
+}
+
 export const logout = async (req, res, next) => {
 	try {
 		//clear the cookie containing the token
