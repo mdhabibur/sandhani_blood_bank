@@ -6,8 +6,7 @@ import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import { animate, motion } from "framer-motion";
-import FloatingCircularTopBottom from "./components/floatingCircularTopBottom";
-import FloatingCircularBottomRight from "./components/FloatingCircularBottomRight";
+
 import FloatingShape from "./components/FloatingShape";
 
 function App() {
