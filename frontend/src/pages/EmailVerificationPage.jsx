@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { verifyEmail } from "../redux/auth/authApi";
-import { resetSignUpState } from "../redux/auth/authSlice";
+import { resetAuthState, } from "../redux/auth/authSlice";
 import toast from "react-hot-toast";
 
 
@@ -55,7 +55,6 @@ const EmailVerificationPage = () => {
         const verificationCode = code.join("")
 
 		try {
-
 			dispatch(
 				verifyEmail({
 					url: "http://localhost:5000/api/auth/verify-email",
@@ -76,14 +75,14 @@ const EmailVerificationPage = () => {
             if(error || success){
         
               if(success){
-                dispatch(resetSignUpState())
+                dispatch(resetAuthState())
                 navigate('/')
                 toast.success("Email verified successfully");
                 return
               }
           
               timer = setTimeout(() => {
-                dispatch(resetSignUpState())
+                dispatch(resetAuthState())
               }, 3000)
             }
         
@@ -109,6 +108,10 @@ const EmailVerificationPage = () => {
 				transition={{ duration: 0.5 }}
 				className="bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-2xl p-8 w-full max-w-md"
 			>
+
+
+				{error && toast.error(error)}
+
 				<h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
 					Verify Your Email
 				</h2>

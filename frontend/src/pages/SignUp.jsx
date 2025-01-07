@@ -6,7 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpUser } from "../redux/auth/authApi";
-import { resetSignUpState } from "../redux/auth/authSlice";
+import { resetAuthState, } from "../redux/auth/authSlice";
+import toast from "react-hot-toast";
 const SignUp = () => {
 
     const {loading, error, success, currentUser} = useSelector((state) => state.auth) 
@@ -30,7 +31,6 @@ const SignUp = () => {
 		e.preventDefault();
 
         try {
-
             //email sign up
             dispatch(signUpUser({url: "http://localhost:5000/api/auth/signup" ,formData:formData}))
             
@@ -48,13 +48,14 @@ const SignUp = () => {
         if(error || success){
     
           if(success){
-            dispatch(resetSignUpState())
+            dispatch(resetAuthState())
             navigate('/verify-email')
+			toast.success(success);
             return
           }
       
           timer = setTimeout(() => {
-            dispatch(resetSignUpState())
+            dispatch(resetAuthState())
           }, 3000)
         }
     
@@ -77,6 +78,8 @@ const SignUp = () => {
 				<h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
 					Create Account
 				</h2>
+
+				{error && toast.error(error)}
 
 				<form onSubmit={handleSignUp}>
 					<Input
