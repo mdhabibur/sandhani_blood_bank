@@ -1,16 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { verifyEmail } from "../redux/auth/authApi";
+import { resetSignUpState } from "../redux/auth/authSlice";
+import toast from "react-hot-toast";
+
 
 const EmailVerificationPage = () => {
+	const { loading, error, success, currentUser } = useSelector(
+		(state) => state.auth
+	);
+
 	const [code, setCode] = useState(["", "", "", "", "", ""]);
 	const inputRefs = useRef([]);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
-    let isLoading = false
-
-
-    const handleChange = (index, value) => {
+	const handleChange = (index, value) => {
 		const newCode = [...code];
 
 		// Handle pasted content
@@ -45,7 +52,47 @@ const EmailVerificationPage = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
+        const verificationCode = code.join("")
+
+		try {
+
+			dispatch(
+				verifyEmail({
+					url: "http://localhost:5000/api/auth/verify-email",
+					formData: {code:verificationCode},
+				})
+			);
+		} catch (error) {
+			//frontend error
+			console.log("frontend Error: ", error);
+		}
 	};
+
+
+        useEffect(() => {
+    
+            //timer object
+            let timer 
+            if(error || success){
+        
+              if(success){
+                dispatch(resetSignUpState())
+                navigate('/')
+                toast.success("Email verified successfully");
+                return
+              }
+          
+              timer = setTimeout(() => {
+                dispatch(resetSignUpState())
+              }, 3000)
+            }
+        
+            //cleanup timer on unmount
+            return () => clearTimeout(timer)
+        
+        
+          }, [error, success, dispatch, navigate])
+    
 
 	// Auto submit when all fields are filled
 	useEffect(() => {
@@ -54,11 +101,8 @@ const EmailVerificationPage = () => {
 		}
 	}, [code]);
 
-
-
 	return (
 		<div className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden">
-
 			<motion.div
 				initial={{ opacity: 0, y: -50 }}
 				animate={{ opacity: 1, y: 0 }}
@@ -88,15 +132,14 @@ const EmailVerificationPage = () => {
 						))}
 					</div>
 
-
 					<motion.button
 						whileHover={{ scale: 1.05 }}
 						whileTap={{ scale: 0.95 }}
 						type="submit"
-						disabled={isLoading || code.some((digit) => !digit)}
+						disabled={loading || code.some((digit) => !digit)}
 						className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 disabled:opacity-50"
 					>
-						{isLoading ? "Verifying..." : "Verify Email"}
+						{loading ? "Verifying..." : "Verify Email"}
 					</motion.button>
 				</form>
 			</motion.div>

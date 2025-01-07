@@ -9,6 +9,7 @@ import { animate, motion } from "framer-motion";
 
 import FloatingShape from "./components/FloatingShape";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
+import { Toaster } from "react-hot-toast";
 
 function App() {
 	return (
@@ -22,12 +23,15 @@ function App() {
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/signin" element={<SignIn />} />
+					<Route path="/login" element={<SignIn />} />
 					<Route path="/signup" element={<SignUp />} />
           <Route path="/verify-email" element={<EmailVerificationPage />} />
 				</Routes>
 			</BrowserRouter>
-		</div>
+		
+    
+    <Toaster />
+    </div>
 	);
 }
 
