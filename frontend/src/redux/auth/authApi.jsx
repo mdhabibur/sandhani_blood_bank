@@ -56,6 +56,31 @@ export const signInUser = createAsyncThunk(
 	}
 );
 
+export const logoutUser = createAsyncThunk(
+	"auth/logoutUser",
+	async (credentials, { rejectWithValue }) => {
+		try {
+			const response = await fetch(credentials.url, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				credentials: "include",
+			});
+
+			const data = await response.json();
+			console.log("data: ", data);
+
+			if (data.success === false) {
+				return rejectWithValue(data?.message || "Sign in failed");
+			}
+
+			return data;
+		} catch (error) {
+			console.log("error: ", error);
+			return rejectWithValue("an error occurred during sign-up in FE");
+		}
+	}
+);
+
 export const verifyEmail = createAsyncThunk(
 	"auth/verifyEmail",
 	async (credentials, { rejectWithValue }) => {

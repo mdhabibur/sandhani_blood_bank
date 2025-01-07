@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { signInUser, signUpUser, verifyEmail } from "./authApi";
+import { logoutUser, signInUser, signUpUser, verifyEmail } from "./authApi";
 
 
 const initialState = {
@@ -51,6 +51,25 @@ const authSlice = createSlice({
 
         })
         .addCase(signInUser.rejected, (state, action) => {
+            state.loading = false
+            state.success = null
+            state.error = action.payload
+
+        })
+
+
+        .addCase(logoutUser.pending, (state) => {
+            state.loading = true
+            state.error = null
+        })
+        .addCase(logoutUser.fulfilled, (state, action) => {
+            state.loading = false
+            state.error = null
+            state.currentUser = null
+            state.success = action.payload.message
+
+        })
+        .addCase(logoutUser.rejected, (state, action) => {
             state.loading = false
             state.success = null
             state.error = action.payload
