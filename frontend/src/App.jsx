@@ -12,6 +12,7 @@ import EmailVerificationPage from "./pages/EmailVerificationPage";
 import { Toaster } from "react-hot-toast";
 import PublicRoute from "./components/routeProtection/PublicRoute";
 import PrivateRoute from "./components/routeProtection/PrivateRoute";
+import EmailVerifiedRoute from "./components/routeProtection/EmailVerifiedRoute";
 
 function App() {
 	return (
@@ -67,7 +68,14 @@ function App() {
 							</PublicRoute>
 						}
 					/>
-					<Route path="/verify-email" element={<EmailVerificationPage />} />
+					<Route
+						path="/verify-email"
+						element={
+							<EmailVerifiedRoute>
+								<EmailVerificationPage />
+							</EmailVerifiedRoute>
+						}
+					/>
 				</Routes>
 			</BrowserRouter>
 
