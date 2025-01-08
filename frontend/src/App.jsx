@@ -13,6 +13,9 @@ import { Toaster } from "react-hot-toast";
 import PublicRoute from "./components/routeProtection/PublicRoute";
 import PrivateRoute from "./components/routeProtection/PrivateRoute";
 import EmailVerifiedRoute from "./components/routeProtection/EmailVerifiedRoute";
+import NotFoundPage from "./pages/NotFoundPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 function App() {
 	return (
@@ -76,6 +79,29 @@ function App() {
 							</EmailVerifiedRoute>
 						}
 					/>
+
+					<Route
+						path="/forgot-password"
+						element={
+							<PublicRoute>
+								<ForgotPasswordPage />
+							</PublicRoute>
+						}
+					/>
+
+
+<Route
+						path="/reset-password/:token"
+						element={
+							<PublicRoute>
+								<ResetPasswordPage />
+							</PublicRoute>
+						}
+					/>
+
+
+
+					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</BrowserRouter>
 

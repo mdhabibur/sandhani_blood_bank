@@ -221,7 +221,7 @@ export const forgotPassword = async (req, res, next) => {
 		await user.save({ validateBeforeSave: false });
 
 		//create resetUrl
-		const resetUrl = `http://localhost:5000/api/auth/reset-password/${resetToken}`;
+		const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
 
 		//send email to user about reset token
 		await passwordResetRequestSend(user.email, resetUrl);
@@ -276,7 +276,7 @@ export const resetPassword = async (req, res, next) => {
 
 		res.status(200).json({
 			success: true,
-			message: "Password has been reset successfully",
+			message: "Password reset successfully, redirecting to login page...",
 		});
 	} catch (error) {
 		next(error);
