@@ -40,7 +40,7 @@ const ResetPasswordPage = () => {
 		try {
             dispatch(
                 resetPassword({
-                    url: `http://localhost:5000/api/auth/reset-password/${token}`,
+                    url: `/api/auth/reset-password/${token}`,
                     formData: formData,
                 })
             );

@@ -32,7 +32,7 @@ const ForgotPasswordPage = () => {
 		try {
 			dispatch(
 				forgotPassword({
-					url: "http://localhost:5000/api/auth/forgot-password",
+					url: "/api/auth/forgot-password",
 					formData: formData,
 				})
 			);

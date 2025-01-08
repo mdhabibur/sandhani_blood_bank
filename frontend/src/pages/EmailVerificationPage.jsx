@@ -57,7 +57,7 @@ const EmailVerificationPage = () => {
 		try {
 			dispatch(
 				verifyEmail({
-					url: "http://localhost:5000/api/auth/verify-email",
+					url: "/api/auth/verify-email",
 					formData: {code:verificationCode},
 				})
 			);

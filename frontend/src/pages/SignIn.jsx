@@ -30,7 +30,7 @@ const SignIn = () => {
 			//email sign up
 			dispatch(
 				signInUser({
-					url: "http://localhost:5000/api/auth/login",
+					url: "/api/auth/login",
 					formData: formData,
 				})
 			);

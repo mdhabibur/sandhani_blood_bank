@@ -32,7 +32,7 @@ const SignUp = () => {
 
         try {
             //email sign up
-            dispatch(signUpUser({url: "http://localhost:5000/api/auth/signup" ,formData:formData}))
+            dispatch(signUpUser({url: "/api/auth/signup" ,formData:formData}))
             
           } catch (error) {
             //frontend error

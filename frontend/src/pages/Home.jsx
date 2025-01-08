@@ -20,7 +20,7 @@ const Home = () => {
 			//email sign up
 			dispatch(
 				logoutUser({
-					url: "http://localhost:5000/api/auth/logout",
+					url: "/api/auth/logout",
 				})
 			);
 		} catch (error) {
